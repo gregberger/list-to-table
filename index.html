@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/vue-clipboard2@0.2.1/dist/vue-clipboard.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+
+    
+    <title>CSV list to html table</title>
+</head>
+<body>
+    <div id="app" class="container p-centered">
+       
+         <h1>Convertir une liste ou un csv en table html</h1>
+       
+        <div class="columns">
+            <div class="column col-8 col-mx-auto">
+                <form class="form-horizontal" v-on:submit.prevent>
+                    <div class="form-group">
+                        <label class="form-label" for="list">Insérer une liste avec un élément par ligne</label>
+                        <textarea class="form-input" v-on:change="getHtmlTable" v-model="content" name="list" placeholder="collez votre liste" cols="30" rows="10"></textarea>
+                    </div>
+                    <div class="form-group form-inline">
+                        <label class="form-label" for="nb-col">Nombres de colonnes</label>
+                        <input class="form-input" v-on:change="getHtmlTable" name="nb-col" type="number" min="2" max="10" v-model="nbCol"></input>
+                        <label for="table-title">Titre</label>
+                        <input class="form-input"  name="table-title" type="text" v-on:key.up="getHtmlTable" v-model="title"></input>
+                    
+                    </div>
+                    <div class="form-group ">
+                        <button class="btn btn-primary badge" v-bind:data-badge="lineCount" v-on:click="getHtmlTable">Generate Html Table</button>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+        <div class="columns">
+            
+            <div class="column col-10 col-mx-auto">
+                <ul class="tab tab-block">
+                    <li 
+                        v-for="tab in tabs"
+                        v-bind:key="tab"
+                        v-bind:class="['tab-item', {active: currentTab == tab}]"
+                        
+                    >
+                        <a href="#" v-on:click.prevent v-on:click="currentTab=tab">{{tab}}</a>
+                    </li>
+                    <li class="tab-item tab-action">
+                        <div class="input-group input-inline">
+                            <button class="btn btn-primary btn-sm input-group-btn" 
+                                v-clipboard:copy="result" v-clipboard:success="onCopy" v-clipboard:error="onError">
+                                Copy to clipboard
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+                <component v-bind:result="result" v-bind:is="currentTabComponent"></component>
+                
+            </div>
+        </div>
+     </div>
+    </div>
+</body>
+<script src="./app.js"></script>
+    
+</html>
